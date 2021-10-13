@@ -3,6 +3,8 @@ package com.uis.restfulapp.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.uis.restfulapp.dto.AuthorDetails;
 import com.uis.restfulapp.dto.AuthorForm;
 import com.uis.restfulapp.entity.Author;
@@ -37,6 +39,30 @@ public class AuthorServiceImpl implements AuthorService{
         });
         return list_details;
     }
+
+    @Override
+    public AuthorDetails findById(Long id){
+        AuthorDetails author_detail = new AuthorDetails();
+        Author author = Author_repository.getById(id);
+        author_detail.setEntity(author);
+        return author_detail;        
+    }
+
+    @Override
+    public AuthorDetails updateAuthor(AuthorForm form, Long id){
+        Author author = Author_repository.getById(id);
+        form.setEntity(author);
+        AuthorDetails author_detail = new AuthorDetails();
+        author_detail.setEntity(Author_repository.save(author));
+        return author_detail;
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Long id){
+        Author_repository.deleteById(id);
+    }
+
 
     
 }
